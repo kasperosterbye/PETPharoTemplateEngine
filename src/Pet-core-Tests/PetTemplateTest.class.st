@@ -101,6 +101,14 @@ lars'
 ]
 
 { #category : #tests }
+PetTemplateTest >> testTwoCommandNoArgs [
+	| in res |
+	in := 'www!foo !bar www'.
+	res := PetTemplateMock new expand: in.
+	self assert: res equals: 'www«foo[]» «bar[]» www'
+]
+
+{ #category : #tests }
 PetTemplateTest >> testTwoCommands [
 	| in res |
 	in := 'www!foo{www}aaa!bar{mmm}'.

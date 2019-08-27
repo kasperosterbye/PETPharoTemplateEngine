@@ -1,3 +1,8 @@
+"
+I am a parser which is able to sift out commands from the source stream.
+
+
+"
 Class {
 	#name : #PetParser,
 	#superclass : #Object,
@@ -117,9 +122,12 @@ PetParser >> ignoreSpace [
 			next := $a.
 			^ self ].
 	ch = $!
-		ifTrue: [ self emitCommand.
+		ifTrue: [ 
+			self emitCommand.
+			self whiteSpaceEmit.
 			self commandCollectInit.
-			next := $c ].
+			next := $c .
+			^self].
 	"something not a arg"
 	self emitCommand.
 	self whiteSpaceEmit.

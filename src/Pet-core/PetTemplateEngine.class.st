@@ -1,3 +1,11 @@
+"
+I am the template expansion engine. My main methods are:
+
+pushVocabulary:
+popVocabulary:
+and
+expand:
+"
 Class {
 	#name : #PetTemplateEngine,
 	#superclass : #Object,
@@ -16,7 +24,7 @@ PetTemplateEngine >> execute: command with: args [
 				execute: 'error'
 				with:
 					{command.
-					args} ]
+					args. ex description} ]
 ]
 
 { #category : #public }
@@ -37,6 +45,6 @@ PetTemplateEngine >> pushVocabulary: voc [
 
 { #category : #'as yet unclassified' }
 PetTemplateEngine >> unknownCommand: cmd withArgs: args [
-	^ '«---> ' , cmd , '[' , args size printString
-		, '] <--- should be implemented»'
+	^ '[[[ Unknown command: ' , cmd , ' with '
+		, args size printString , ' arguments ]]]'
 ]

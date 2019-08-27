@@ -14,19 +14,11 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-PetStandardVocabulary >> anchor: txt url: url [
-	<keywordCommand: 'link'>
-	| expanded |
-	expanded := engine expand: txt.
-	^ '<a href="', url,'">' , expanded , '</a>'
-]
-
-{ #category : #'as yet unclassified' }
 PetStandardVocabulary >> bold: txt [
 	<keywordCommand: 'b'>
 	| expanded |
 	expanded := engine expand: txt.
-	^  expanded asText allBold
+	^ expanded allBold
 ]
 
 { #category : #'as yet unclassified' }

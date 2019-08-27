@@ -10,8 +10,18 @@ Class {
 
 { #category : #'as yet unclassified' }
 PetVocabularyBase >> error: cmd args: argArray [
+	"<keywordCommand: 'error'>"
+	^ '[[[Error: ' , cmd , '/'
+		, ((argArray collect: [ :a | a printString ]) joinUsing: '§')
+		, ' ]]]'
+]
+
+{ #category : #'as yet unclassified' }
+PetVocabularyBase >> error: cmd args: argArray desc: desc [
 	<keywordCommand: 'error'>
-	^ '@@@@ ' , cmd ,'/', ((argArray collect: [:a|a printString] ) joinUsing: '§'), ' @@@@'
+	^ '[[[Error: ' , cmd , '/'
+		, ((argArray collect: [ :a | a printString ]) joinUsing: '§')
+		, '"', desc, '" ]]]'
 ]
 
 { #category : #'as yet unclassified' }
