@@ -5,7 +5,17 @@ it -> italics
 b -> bold
 sup -> superscript
 sub -> subsript
-link -> hyperlink {text}{url}
+
+Note to Kasper:
+You set the font of a text using: 
+'myText' asText  addAttribute: (TextFontReference toFont: font).
+
+You can get a list of font families using: 
+StrikeFont  actualFamilyNames
+
+
+You get an actual font from a family using: 
+StrikeFont familyName: 'Bitmap Source Sans Pro' pointSize: 18.
 "
 Class {
 	#name : #PetStandardVocabulary,

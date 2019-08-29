@@ -12,7 +12,7 @@ PetTemplateTest >> testCommandArg [
 	| in res |
 	in := 'www!foo{www}'.
 	res := PetTemplateMock new expand: in.
-	self assert: res equals: 'www«foo[www]»'
+	self assert: res equals: 'www¬´foo[www]¬ª'
 ]
 
 { #category : #tests }
@@ -20,7 +20,7 @@ PetTemplateTest >> testCommandArgSpaceAtEnd [
 	| in res |
 	in := 'www!foo{www}  '.
 	res := PetTemplateMock new expand: in.
-	self assert: res equals: 'www«foo[www]»  '
+	self assert: res equals: 'www¬´foo[www]¬ª  '
 ]
 
 { #category : #tests }
@@ -28,7 +28,7 @@ PetTemplateTest >> testCommandArgWithBraceInside [
 	| in res |
 	in := 'www!foo{ww{xxx}w}'.
 	res := PetTemplateMock new expand: in.
-	self assert: res equals: 'www«foo[ww{xxx}w]»'
+	self assert: res equals: 'www¬´foo[ww{xxx}w]¬ª'
 ]
 
 { #category : #tests }
@@ -36,7 +36,7 @@ PetTemplateTest >> testCommandNoArgs [
 	| in res |
 	in := 'www!foo www'.
 	res := PetTemplateMock new expand: in.
-	self assert: res equals: 'www«foo[]» www'
+	self assert: res equals: 'www¬´foo[]¬ª www'
 ]
 
 { #category : #tests }
@@ -44,7 +44,7 @@ PetTemplateTest >> testCommandNoArgsAtEnd [
 	| in res |
 	in := 'www!foo'.
 	res := PetTemplateMock new expand: in.
-	self assert: res equals: 'www«foo[]»'
+	self assert: res equals: 'www¬´foo[]¬ª'
 ]
 
 { #category : #tests }
@@ -55,7 +55,7 @@ PetTemplateTest >> testCommandNoArgsAtEndWithWhiteSpace [
 	self
 		assert: res
 		equals:
-			'www«foo[]» '
+			'www¬´foo[]¬ª '
 ]
 
 { #category : #tests }
@@ -63,7 +63,7 @@ PetTemplateTest >> testCommandTwoArg [
 	| in res |
 	in := 'www!foo{www}{mmm}'.
 	res := PetTemplateMock new expand: in.
-	self assert: res equals: 'www«foo[www§mmm]»'
+	self assert: res equals: 'www¬´foo[www¬ßmmm]¬ª'
 ]
 
 { #category : #tests }
@@ -113,5 +113,13 @@ PetTemplateTest >> testTwoCommands [
 	| in res |
 	in := 'www!foo{www}aaa!bar{mmm}'.
 	res := PetTemplateMock new expand: in.
-	self assert: res equals: 'www«foo[www]»aaa«bar[mmm]»'
+	self assert: res equals: 'www¬´foo[www]¬ªaaa¬´bar[mmm]¬ª'
+]
+
+{ #category : #tests }
+PetTemplateTest >> testTwoExclamations [
+	| in res |
+	in := 'www!!mmm'.
+	res := PetTemplateMock new expand: in.
+	self assert: res equals: 'www!¬´mmm[]¬ª'
 ]

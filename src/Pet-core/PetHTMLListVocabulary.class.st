@@ -22,6 +22,11 @@ PetHTMLListVocabulary >> initalize [
 	firstElement := true
 ]
 
+{ #category : #'as yet unclassified' }
+PetHTMLListVocabulary >> initialize [
+	firstElement := true
+]
+
 { #category : #accessing }
 PetHTMLListVocabulary >> item [
 	<keywordCommand: 'item'>

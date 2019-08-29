@@ -12,7 +12,7 @@ Class {
 PetVocabularyBase >> error: cmd args: argArray [
 	"<keywordCommand: 'error'>"
 	^ '[[[Error: ' , cmd , '/'
-		, ((argArray collect: [ :a | a printString ]) joinUsing: '§')
+		, ((argArray collect: [ :a | a printString ]) joinUsing: '¬ß')
 		, ' ]]]'
 ]
 
@@ -20,7 +20,7 @@ PetVocabularyBase >> error: cmd args: argArray [
 PetVocabularyBase >> error: cmd args: argArray desc: desc [
 	<keywordCommand: 'error'>
 	^ '[[[Error: ' , cmd , '/'
-		, ((argArray collect: [ :a | a printString ]) joinUsing: '§')
+		, ((argArray collect: [ :a | a printString ]) joinUsing: '¬ß')
 		, '"', desc, '" ]]]'
 ]
 

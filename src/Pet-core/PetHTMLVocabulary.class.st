@@ -44,3 +44,17 @@ PetHTMLVocabulary >> italics: txt [
 	expanded := engine expand: txt.
 	^ '<em>' , expanded , '</em'
 ]
+
+{ #category : #'as yet unclassified' }
+PetHTMLVocabulary >> list [
+	<keywordCommand: 'list'>
+	engine pushVocabulary: PetHTMLListVocabulary new.
+	^ '\<ul>\' withCRs
+]
+
+{ #category : #'as yet unclassified' }
+PetHTMLVocabulary >> verbatim [
+	<keywordCommand: 'verbatim'>
+	engine pushVocabulary: PetVerbatimVocabulary  new.
+	^ '' 
+]

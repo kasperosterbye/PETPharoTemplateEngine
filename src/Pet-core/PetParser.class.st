@@ -24,17 +24,17 @@ Class {
 
 { #category : #states }
 PetParser >> argumentCollect [
-	ch = ${
+	ch = self commandArgBeginChar 
 		ifTrue: [ cnt := cnt + 1.
 			argBuf nextPut: ch ].
-	ch = $}
+	ch = self commandArgEndChar 
 		ifTrue: [ cnt = 0
 				ifTrue: [ argsBuf add: argBuf contents.
-					self ignoreSpaceInit .
+					self ignoreSpaceInit.
 					next := $i ]
 				ifFalse: [ cnt := cnt - 1.
 					argBuf nextPut: ch ] ].
-	('{}' includes: ch)
+	({self commandArgBeginChar. self commandArgEndChar .} includes: ch)
 		ifFalse: [ argBuf nextPut: ch ]
 ]
 
@@ -42,6 +42,21 @@ PetParser >> argumentCollect [
 PetParser >> argumentCollectInit [
 	cnt := 0.
 	argBuf := WriteStream on: String new.
+]
+
+{ #category : #'as yet unclassified' }
+PetParser >> commandArgBeginChar [
+	^ ${
+]
+
+{ #category : #'as yet unclassified' }
+PetParser >> commandArgEndChar [
+	^ $}
+]
+
+{ #category : #'as yet unclassified' }
+PetParser >> commandBeginChar [
+	^ $!
 ]
 
 { #category : #states }
@@ -54,15 +69,18 @@ PetParser >> commandCollect [
 			whiteSpace nextPut: ch.
 			next := $i.
 			^ self ].
-	ch = ${
+	ch = self commandArgBeginChar
 		ifTrue: [ self argumentCollectInit.
 			next := $a.
+			^ self ].	ch = self commandBeginChar & commandBuf isEmpty
+		ifTrue: [ out nextPut: ch.
+			next = $s.
 			^ self ].
-	ch = $!
+	ch = self commandBeginChar
 		ifTrue: [ self emitCommand.
 			self commandCollectInit.
 			^ self ].
-	"command ended with some special character - eg. .,; or the like"
+
 	self emitCommand.
 	out nextPut: ch.
 	next := $s
@@ -117,17 +135,16 @@ PetParser >> ignoreSpace [
 	ch asInteger <= 32
 		ifTrue: [ whiteSpace nextPut: ch.
 			^ self ].
-	ch = ${
+	ch = self commandArgBeginChar 
 		ifTrue: [ self argumentCollectInit.
 			next := $a.
 			^ self ].
-	ch = $!
-		ifTrue: [ 
-			self emitCommand.
+	ch = self commandBeginChar 
+		ifTrue: [ self emitCommand.
 			self whiteSpaceEmit.
 			self commandCollectInit.
-			next := $c .
-			^self].
+			next := $c.
+			^ self ].
 	"something not a arg"
 	self emitCommand.
 	self whiteSpaceEmit.
@@ -151,7 +168,7 @@ PetParser >> onTemplate: templ in: aStreamOrString [
 
 { #category : #states }
 PetParser >> stringCopy [
-	ch = $!
+	ch = self commandBeginChar 
 		ifTrue: [ next := $c.
 			self commandCollectInit ]
 		ifFalse: [ out nextPut: ch ]
