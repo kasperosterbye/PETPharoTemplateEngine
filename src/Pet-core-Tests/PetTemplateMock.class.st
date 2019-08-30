@@ -9,3 +9,8 @@ PetTemplateMock >> execute: command with: args [
 	command ifEmpty: [ ^ '*' ].
 	^ '¬´' , command , '[' , (args joinUsing: '¬ß') , ']¬ª'
 ]
+
+{ #category : #'as yet unclassified' }
+PetTemplateMock >> omg [
+	^'abc æøå © «»'
+]
