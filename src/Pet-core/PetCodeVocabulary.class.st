@@ -7,6 +7,22 @@ Class {
 	#category : #'Pet-core'
 }
 
+{ #category : #examples }
+PetCodeVocabulary class >> example [
+	<example>
+	| text |
+	text := '
+It is possible to refer to a method, and have its definition inlined:
+!method{String}{asString}
+Not the most interesting method, but a method nevertheless.	
+	'.
+	^PetTemplateEngine new 
+		pushVocabulary: PetVocabularyBase new;
+		pushVocabulary: PetCodeVocabulary new;
+		expand: text
+	
+]
+
 { #category : #asserting }
 PetCodeVocabulary >> assert: res equals: expected [
 	color := res = expected
@@ -26,9 +42,11 @@ PetCodeVocabulary >> class: className method: methodName [
 	compiledMethod
 		ifNil: [ ^ 'Could not find method ' asText , methodName asText allBold
 				, ' in ' , className ].
-	sourceCode := PetCodeStyler new styleCompiledMethod: compiledMethod.
+	sourceCode := SHRBTextStyler new
+		classOrMetaClass: class;
+		styledTextFor: compiledMethod sourceCode asText.
 	sourceCode addAttribute: (TextIndent tabs: 1).
-	^ sourceCode
+	^ (className , ' >> ') asText , sourceCode
 ]
 
 { #category : #tests }
