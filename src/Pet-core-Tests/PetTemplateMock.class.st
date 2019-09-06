@@ -7,7 +7,7 @@ Class {
 { #category : #public }
 PetTemplateMock >> execute: command with: args [
 	command ifEmpty: [ ^ '*' ].
-	^ '¬´' , command , '[' , (args joinUsing: '¬ß') , ']¬ª'
+	^ '«' , command , '[' , (args joinUsing: '§') , ']»'
 ]
 
 { #category : #'as yet unclassified' }
