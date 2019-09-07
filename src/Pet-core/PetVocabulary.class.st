@@ -16,7 +16,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'engine',
-		'next'
+		'nextVoc'
 	],
 	#classInstVars : [
 		'commandCache'
@@ -95,17 +95,17 @@ PetVocabulary >> execute: command with: args [
 ]
 
 { #category : #accessing }
-PetVocabulary >> next [
-	^ next
+PetVocabulary >> nextVoc [
+	^ nextVoc
 ]
 
 { #category : #accessing }
-PetVocabulary >> next: anObject [
-	next := anObject
+PetVocabulary >> nextVoc: voc [
+	nextVoc := voc
 ]
 
 { #category : #public }
 PetVocabulary >> unknownCommand: cmd withArgs: args [
 	"I did not know how to handle this command. Try next vocabulary"
-	^ next execute: cmd with: args
+	^ nextVoc execute: cmd with: args
 ]

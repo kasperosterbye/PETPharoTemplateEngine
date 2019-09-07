@@ -1,6 +1,6 @@
 Class {
 	#name : #PetTemplateMock,
-	#superclass : #PetTemplateEngine,
+	#superclass : #PetEngine,
 	#category : #'Pet-core-Tests'
 }
 

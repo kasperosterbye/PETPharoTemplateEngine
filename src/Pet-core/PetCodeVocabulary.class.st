@@ -1,3 +1,8 @@
+"
+I am a vocabulary for inlining code.
+
+See the individual commands for help.
+"
 Class {
 	#name : #PetCodeVocabulary,
 	#superclass : #PetVocabulary,
@@ -8,19 +13,62 @@ Class {
 }
 
 { #category : #examples }
-PetCodeVocabulary class >> example [
+PetCodeVocabulary class >> exampleMethodInclude [
 	<example>
 	| text |
-	text := '
-It is possible to refer to a method, and have its definition inlined:
+	text := 'It is possible to refer to a method, and have its definition inlined:
 !method{String}{asString}
 Not the most interesting method, but a method nevertheless.	
-	'.
-	^PetTemplateEngine new 
+'.
+	(PetEngine new
 		pushVocabulary: PetVocabularyBase new;
 		pushVocabulary: PetCodeVocabulary new;
-		expand: text
-	
+		expand: text) inspect
+]
+
+{ #category : #examples }
+PetCodeVocabulary class >> exampleTests [
+	<example>
+	| text |
+	text := 'You can write a test inline:
+!test{2+2 is 4}{self assert: 2 + 2 equals: 4}
+!test{2+2 is 5}{self assert: 2 + 2 equals: 5}
+!test{Did no assert}{2+2=4}
+!test{2/0 is bad}{self assert: 2/0 equals: 7}
+'.
+	(PetEngine new
+		pushVocabulary: PetVocabularyBase new;
+		pushVocabulary: PetCodeVocabulary new;
+		expand: text) inspect
+]
+
+{ #category : #examples }
+PetCodeVocabulary class >> exampleUML [
+	<example>
+	| text |
+	text := 'You can write plant uml inline:
+!uml{
+@startmindmap
+* Debian
+** Ubuntu
+*** Linux Mint
+*** Kubuntu
+*** Lubuntu
+*** KDE Neon
+** LMDE
+** SolydXK
+** SteamOS
+** Raspbian with a very long name
+*** <s>Raspmbc</s> => OSMC
+*** <s>Raspyfi</s> => Volumio
+@endmindmap
+}
+Cool - eh?
+'.
+	(PetEngine new
+		pushVocabulary: PetVocabularyBase new;
+		pushVocabulary: PetCodeVocabulary new;
+		expand: text) inspect
 ]
 
 { #category : #asserting }
@@ -65,4 +113,15 @@ PetCodeVocabulary >> test: testName code: code [
 	color = Color red
 		ifFalse: [ ^ res ].
 	^ res , '\' withCRs , error asText , '\' withCRs , (code asText addAttribute: (TextColor color: Color red))
+]
+
+{ #category : #tests }
+PetCodeVocabulary >> uml: uml [
+	<keywordCommand: 'uml'>
+	| encoded serverUrl anchoredImage |
+	encoded := uml plantDeflateAndEncode.
+	serverUrl := 'https://www.plantuml.com/plantuml/img/' , encoded.
+	anchoredImage := (String value: 1) asText
+		addAttribute: (TextAnchor new anchoredMorph: (ZnEasy getPng: serverUrl)).
+	^ anchoredImage
 ]

@@ -7,9 +7,8 @@ Class {
 	#name : #PetParser,
 	#superclass : #Object,
 	#instVars : [
-		'template',
 		'in',
-		'out',
+		'outStream',
 		'state',
 		'next',
 		'ch',
@@ -17,7 +16,8 @@ Class {
 		'commandBuf',
 		'argBuf',
 		'argsBuf',
-		'whiteSpace'
+		'whiteSpace',
+		'engine'
 	],
 	#category : #'Pet-core'
 }
@@ -44,17 +44,17 @@ PetParser >> argumentCollectInit [
 	argBuf := WriteStream on: String new.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #public }
 PetParser >> commandArgBeginChar [
 	^ ${
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #public }
 PetParser >> commandArgEndChar [
 	^ $}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #public }
 PetParser >> commandBeginChar [
 	^ $!
 ]
@@ -72,17 +72,17 @@ PetParser >> commandCollect [
 	ch = self commandArgBeginChar
 		ifTrue: [ self argumentCollectInit.
 			next := $a.
-			^ self ].	ch = self commandBeginChar & commandBuf isEmpty
-		ifTrue: [ out nextPut: ch.
+			^ self ].
+	ch = self commandBeginChar & commandBuf isEmpty
+		ifTrue: [ outStream nextPut: ch.
 			next = $s.
 			^ self ].
 	ch = self commandBeginChar
 		ifTrue: [ self emitCommand.
 			self commandCollectInit.
 			^ self ].
-
 	self emitCommand.
-	out nextPut: ch.
+	outStream nextPut: ch.
 	next := $s
 ]
 
@@ -96,7 +96,7 @@ PetParser >> commandCollectInit [
 PetParser >> convert [
 	"return the converted in"
 
-	out := WriteStream on: Text new.
+	outStream := (String new: 40) asText writeStream.
 	state := $s.
 	[ in atEnd ]
 		whileFalse: [ ch := in next.
@@ -111,12 +111,12 @@ PetParser >> convert [
 				ifTrue: [ self argumentCollect ].
 			state := next ].
 	self handleLastCommand.
-	^ out contents
+	^outStream contents.
 ]
 
 { #category : #private }
 PetParser >> emitCommand [
-	out nextPutAll: (template execute: commandBuf contents with: argsBuf)
+	outStream nextPutAll: (engine execute: commandBuf contents with: argsBuf)
 ]
 
 { #category : #private }
@@ -127,7 +127,7 @@ PetParser >> handleLastCommand [
 		ifTrue: [ argsBuf add: argBuf contents ].
 	self emitCommand.
 	state = $i
-		ifTrue: [ out nextPutAll: whiteSpace contents ]
+		ifTrue: [ outStream nextPutAll: whiteSpace contents ]
 ]
 
 { #category : #states }
@@ -135,11 +135,11 @@ PetParser >> ignoreSpace [
 	ch asInteger <= 32
 		ifTrue: [ whiteSpace nextPut: ch.
 			^ self ].
-	ch = self commandArgBeginChar 
+	ch = self commandArgBeginChar
 		ifTrue: [ self argumentCollectInit.
 			next := $a.
 			^ self ].
-	ch = self commandBeginChar 
+	ch = self commandBeginChar
 		ifTrue: [ self emitCommand.
 			self whiteSpaceEmit.
 			self commandCollectInit.
@@ -148,7 +148,7 @@ PetParser >> ignoreSpace [
 	"something not a arg"
 	self emitCommand.
 	self whiteSpaceEmit.
-	out nextPut: ch.
+	outStream nextPut: ch.
 	next := $s
 ]
 
@@ -158,8 +158,8 @@ PetParser >> ignoreSpaceInit [
 ]
 
 { #category : #public }
-PetParser >> onTemplate: templ in: aStreamOrString [
-	template := templ.
+PetParser >> onEngine: anEngine in: aStreamOrString [
+	engine := anEngine.
 	in := aStreamOrString.
 	(in isKindOf: Stream)
 		ifFalse: [ in := ReadStream on: in ].
@@ -168,13 +168,13 @@ PetParser >> onTemplate: templ in: aStreamOrString [
 
 { #category : #states }
 PetParser >> stringCopy [
-	ch = self commandBeginChar 
+	ch = self commandBeginChar
 		ifTrue: [ next := $c.
 			self commandCollectInit ]
-		ifFalse: [ out nextPut: ch ]
+		ifFalse: [ outStream nextPut: ch ]
 ]
 
 { #category : #private }
 PetParser >> whiteSpaceEmit [
-	out nextPutAll: whiteSpace contents.
+	outStream nextPutAll: whiteSpace contents
 ]

@@ -20,8 +20,31 @@ StrikeFont familyName: 'Bitmap Source Sans Pro' pointSize: 18.
 Class {
 	#name : #PetStandardVocabulary,
 	#superclass : #PetVocabulary,
+	#instVars : [
+		'indentLevel'
+	],
 	#category : #'Pet-core'
 }
+
+{ #category : #examples }
+PetStandardVocabulary class >> example [
+	<example>
+	| text |
+	text := '
+We support !b{bold}, !it{italics}, both !b{bold with !it{italics} embedded}.
+We can also do verbatim
+!verbatim 
+Here we have !b{should not bold}.
+!list do not list
+!error{} is not an error
+!endVerbatim
+And now we are back in doing !b{bold}.
+'.
+	(PetEngine new
+		pushVocabulary: PetVocabularyBase new;
+		pushVocabulary: PetStandardVocabulary new;
+		expand: text) inspect
+]
 
 { #category : #'as yet unclassified' }
 PetStandardVocabulary >> bold: txt [
@@ -31,12 +54,36 @@ PetStandardVocabulary >> bold: txt [
 	^ expanded allBold
 ]
 
+{ #category : #accessing }
+PetStandardVocabulary >> endlist [
+	<keywordCommand: 'end'>
+	engine popVocabulary.
+	indentLevel := indentLevel - 1.
+	^ Text new
+]
+
+{ #category : #initialization }
+PetStandardVocabulary >> initialize [
+	indentLevel := 0.
+	
+]
+
 { #category : #'as yet unclassified' }
 PetStandardVocabulary >> italics: txt [
 	<keywordCommand: 'it'>
 	| expanded |
 	expanded := engine expand: txt.
 	^ expanded addAttribute: TextEmphasis italic
+]
+
+{ #category : #accessing }
+PetStandardVocabulary >> list [
+	<keywordCommand: 'list'>
+	indentLevel := indentLevel + 1.
+	engine
+		pushVocabulary: (PetListVocabulary new
+		indentLevel: indentLevel).
+	^ Text new
 ]
 
 { #category : #'as yet unclassified' }
@@ -53,4 +100,11 @@ PetStandardVocabulary >> superscript: txt [
 	| expanded |
 	expanded := engine expand: txt.
 	^ '<sup>' , expanded , '</sup>' 
+]
+
+{ #category : #'as yet unclassified' }
+PetStandardVocabulary >> verbatim [
+	<keywordCommand: 'verbatim'>
+	engine pushVocabulary: PetVerbatimVocabulary new.
+	^ ''asText
 ]

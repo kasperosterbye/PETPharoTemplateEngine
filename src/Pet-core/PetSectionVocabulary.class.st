@@ -11,15 +11,35 @@ Class {
 	#category : #'Pet-core'
 }
 
+{ #category : #examples }
+PetSectionVocabulary class >> example [
+	<example>
+	| text |
+	text := '
+Sections in can be used in the following form.
+
+!s1{Heading AAA}
+!s2{Heading BBB}
+!s2{Heading CCC}
+!s1{Heading DDD}
+!s3{Heading EEE}
+!s2{Heading FFF}
+'.
+	(PetEngine new
+		pushVocabulary: PetVocabularyBase new;
+		pushVocabulary: PetSectionVocabulary new;
+		expand: text) inspect
+]
+
 { #category : #'as yet unclassified' }
 PetSectionVocabulary >> incr: index [
 	counters at: index put: (counters at: index) + 1.
-	index + 1 to: counters size do: [ :i | counters at: i put: 1 ]
+	index + 1 to: counters size do: [ :i | counters at: i put: 0 ]
 ]
 
 { #category : #initialization }
 PetSectionVocabulary >> initialize [
-	counters := #(1 1 1 1 1 1) copy 
+	counters := #(0 0 0 0 0 0) copy
 ]
 
 { #category : #'as yet unclassified' }
@@ -81,7 +101,8 @@ PetSectionVocabulary >> section6heading: hdr [
 { #category : #'as yet unclassified' }
 PetSectionVocabulary >> section: level heading: hdr [
 	| heading |
-	heading := (self levelString: level) asText, ' ', (engine expand: hdr).
 	self incr: level.
-	^heading addAttribute: (self levelFont: level)
+	heading := (self levelString: level) asText , ' '
+		, (engine expand: hdr).
+	^ heading addAttribute: (self levelFont: level)
 ]

@@ -19,9 +19,10 @@ PetVocabularyBase >> error: cmd args: argArray [
 { #category : #'as yet unclassified' }
 PetVocabularyBase >> error: cmd args: argArray desc: desc [
 	<keywordCommand: 'error'>
+	self error.
 	^ '[[[Error: ' , cmd , '/'
-		, ((argArray collect: [ :a | a printString ]) joinUsing: '¬ß')
-		, '"', desc, '" ]]]'
+		, ((argArray collect: [ :a | a printString ]) joinUsing: '//') , '"'
+		, desc , '" ]]]'
 ]
 
 { #category : #'as yet unclassified' }

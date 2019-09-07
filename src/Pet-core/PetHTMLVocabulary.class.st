@@ -13,6 +13,25 @@ Class {
 	#category : #'Pet-core'
 }
 
+{ #category : #examples }
+PetHTMLVocabulary class >> example [
+	<example>
+	| text |
+	text := '
+We support !b{bold}, !it{italics}, both !b{bold with !it{italics} embedded}.
+We can also do verbatim
+!verbatim Here we have !b{should not bold}.
+!list do not list
+!error{} is not an error
+!endVerbatim
+And now we are back in doing !b{bold}.
+'.
+	(PetEngine new
+		pushVocabulary: PetVocabularyBase new;
+		pushVocabulary: PetHTMLVocabulary new;
+		expand: text) inspect
+]
+
 { #category : #'as yet unclassified' }
 PetHTMLVocabulary >> anchor: txt url: url [
 	<keywordCommand: 'link'>
@@ -42,7 +61,7 @@ PetHTMLVocabulary >> italics: txt [
 	<keywordCommand: 'it'>
 	| expanded |
 	expanded := engine expand: txt.
-	^ '<em>' , expanded , '</em'
+	^ '<em>' , expanded , '</em>'
 ]
 
 { #category : #'as yet unclassified' }

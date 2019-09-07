@@ -11,15 +11,34 @@ Class {
 	#category : #'Pet-core'
 }
 
+{ #category : #examples }
+PetHTMLSectionVocabulary class >> example [
+	<example>
+	| text |
+	text := '
+Sections in HTML can be used in the following form.
+!s1{Heading AAA}
+!s2{Heading BBB}
+!s2{Heading CCC}
+!s1{Heading DDD}
+!s2{Heading EEE}
+!s3{Heading FFF}
+'.
+	(PetEngine new
+		pushVocabulary: PetVocabularyBase new;
+		pushVocabulary: PetHTMLSectionVocabulary new;
+		expand: text) inspect
+]
+
 { #category : #'as yet unclassified' }
 PetHTMLSectionVocabulary >> incr: index [
 	counters at: index put: (counters at: index) + 1.
-	index + 1 to: counters size do: [ :i | counters at: i put: 1 ]
+	index + 1 to: counters size do: [ :i | counters at: i put: 0 ]
 ]
 
 { #category : #initialization }
 PetHTMLSectionVocabulary >> initialize [
-	counters := #(1 1 1 1 1 1) copy 
+	counters := #(0 0 0 0 0 0) copy
 ]
 
 { #category : #'as yet unclassified' }
@@ -67,9 +86,9 @@ PetHTMLSectionVocabulary >> section6heading: hdr [
 PetHTMLSectionVocabulary >> section: level heading: hdr [
 	<keywordCommand: 'sec'>
 	| hlevel res |
+	self incr: level asInteger.
 	hlevel := 'h' , level.
 	res := '<' , hlevel , '>' , (self levelString: level asInteger) , ' '
 		, hdr , '</' , hlevel , '>\' withCRs.
-	self incr: level asInteger.
 	^ res
 ]
