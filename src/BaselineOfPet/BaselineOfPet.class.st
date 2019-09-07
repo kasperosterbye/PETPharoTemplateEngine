@@ -28,5 +28,6 @@ BaselineOfPet >> puGizmoDependency: spec [
 
 	spec
 		baseline: 'PUGizmo'
-		with: [ spec repository: 'github://fuhrmanator/PlantUMLPharoGizmo:master/src' ]
+		with: [ spec
+				repository: 'github://fuhrmanator/PlantUMLPharoGizmo' ]
 ]
