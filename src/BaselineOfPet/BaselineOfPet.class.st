@@ -9,9 +9,12 @@ BaselineOfPet >> baseline: spec [
 	<baseline>
 	spec
 		for: #common
-		do: [ spec
+		do: [ "packages"
+			spec
 				package: 'Pet-core';
-				package: 'Pet-core-Tests' with: [ spec requires: #('Pet-core') ] ].
+				package: 'Pet-core-Tests' with: [ spec requires: #('Pet-core') ] .
+			"dependencies"
+			self puGizmoDependency: spec]
 ]
 
 { #category : #accessing }
