@@ -119,7 +119,7 @@ PetCodeVocabulary >> test: testName code: code [
 PetCodeVocabulary >> uml: uml [
 	<keywordCommand: 'uml'>
 	| encoded serverUrl anchoredImage |
-	encoded := uml plantDeflateAndEncode.
+	encoded := "uml plantDeflateAndEncode" nil.
 	serverUrl := 'https://www.plantuml.com/plantuml/img/' , encoded.
 	anchoredImage := (String value: 1) asText
 		addAttribute: (TextAnchor new anchoredMorph: (ZnEasy getPng: serverUrl)).

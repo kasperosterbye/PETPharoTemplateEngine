@@ -7,14 +7,18 @@ Class {
 { #category : #accessing }
 BaselineOfPet >> baseline: spec [
 	<baseline>
-	spec
-		for: #common
-		do: [ "packages"
-			spec
-				package: 'Pet-core';
-				package: 'Pet-core-Tests' with: [ spec requires: #('Pet-core') ] .
-			"dependencies"
-			self puGizmoDependency: spec]
+	spec for: #common do: [ 
+		"dependencies"
+		spec
+			baseline: 'SequenceDiagram'
+			with: [ spec 
+						loads: #('Bridge');
+						repository: 'github://kasperosterbye/SequenceDiagrams' ].
+
+		"packages"
+		spec
+			package: 'Pet-core';
+			package: 'Pet-core-Tests' with: [ spec requires: #( 'Pet-core' ) ] ]
 ]
 
 { #category : #accessing }
