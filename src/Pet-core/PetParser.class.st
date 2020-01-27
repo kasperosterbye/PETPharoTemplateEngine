@@ -31,7 +31,7 @@ PetParser >> argumentCollect [
 		ifTrue: [ cnt = 0
 				ifTrue: [ argsBuf add: argBuf contents.
 					self ignoreSpaceInit.
-					next := $i ]
+					next := #ignoreSpace ]
 				ifFalse: [ cnt := cnt - 1.
 					argBuf nextPut: ch ] ].
 	({self commandArgBeginChar. self commandArgEndChar .} includes: ch)
@@ -67,15 +67,15 @@ PetParser >> commandCollect [
 	ch asInteger <= 32
 		ifTrue: [ self ignoreSpaceInit.
 			whiteSpace nextPut: ch.
-			next := $i.
+			next := #ignoreSpace.
 			^ self ].
 	ch = self commandArgBeginChar
 		ifTrue: [ self argumentCollectInit.
-			next := $a.
+			next := #argumentCollect.
 			^ self ].
 	ch = self commandBeginChar & commandBuf isEmpty
 		ifTrue: [ outStream nextPut: ch.
-			next = $s.
+			next = #stringCopy.
 			^ self ].
 	ch = self commandBeginChar
 		ifTrue: [ self emitCommand.
@@ -83,7 +83,7 @@ PetParser >> commandCollect [
 			^ self ].
 	self emitCommand.
 	outStream nextPut: ch.
-	next := $s
+	next := #stringCopy
 ]
 
 { #category : #private }
@@ -97,17 +97,17 @@ PetParser >> convert [
 	"return the converted in"
 
 	outStream := (String new: 40) asText writeStream.
-	state := $s.
+	state := #stringCopy.
 	[ in atEnd ]
 		whileFalse: [ ch := in next.
 			next := state.
-			state = $s
+			state = #stringCopy
 				ifTrue: [ self stringCopy ].
-			state = $c
+			state = #commandCollect
 				ifTrue: [ self commandCollect ].
-			state = $i
+			state = #ignoreSpace
 				ifTrue: [ self ignoreSpace ].
-			state = $a
+			state = #argumentCollect
 				ifTrue: [ self argumentCollect ].
 			state := next ].
 	self handleLastCommand.
@@ -121,12 +121,12 @@ PetParser >> emitCommand [
 
 { #category : #private }
 PetParser >> handleLastCommand [
-	state = $s
+	state = #stringCopy
 		ifTrue: [ ^ self ].
-	state = $a
-		ifTrue: [ argsBuf add: argBuf contents ].
+	state = #argumentCollect 
+			ifTrue: [ argsBuf add: argBuf contents ].
 	self emitCommand.
-	state = $i
+	state = #ignoreSpace
 		ifTrue: [ outStream nextPutAll: whiteSpace contents ]
 ]
 
@@ -137,19 +137,19 @@ PetParser >> ignoreSpace [
 			^ self ].
 	ch = self commandArgBeginChar
 		ifTrue: [ self argumentCollectInit.
-			next := $a.
+			next := #argumentCollect.
 			^ self ].
 	ch = self commandBeginChar
 		ifTrue: [ self emitCommand.
 			self whiteSpaceEmit.
 			self commandCollectInit.
-			next := $c.
+			next := #commandCollect.
 			^ self ].
 	"something not a arg"
 	self emitCommand.
 	self whiteSpaceEmit.
 	outStream nextPut: ch.
-	next := $s
+	next := #stringCopy
 ]
 
 { #category : #private }
@@ -169,7 +169,7 @@ PetParser >> onEngine: anEngine in: aStreamOrString [
 { #category : #states }
 PetParser >> stringCopy [
 	ch = self commandBeginChar
-		ifTrue: [ next := $c.
+		ifTrue: [ next := #commandCollect.
 			self commandCollectInit ]
 		ifFalse: [ outStream nextPut: ch ]
 ]
