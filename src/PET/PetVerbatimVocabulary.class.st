@@ -6,7 +6,7 @@ I only have one command '!endVerbatim', which pops me, and thereby exits verbati
 Class {
 	#name : #PetVerbatimVocabulary,
 	#superclass : #PetVocabulary,
-	#category : #'Pet-core'
+	#category : #'PET-Text'
 }
 
 { #category : #'as yet unclassified' }

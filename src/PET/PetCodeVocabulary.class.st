@@ -9,7 +9,7 @@ Class {
 	#instVars : [
 		'color'
 	],
-	#category : #'Pet-core'
+	#category : #'PET-Text'
 }
 
 { #category : #examples }

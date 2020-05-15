@@ -19,7 +19,7 @@ Class {
 		'whiteSpace',
 		'engine'
 	],
-	#category : #'Pet-core'
+	#category : #'PET-Core'
 }
 
 { #category : #states }

@@ -8,7 +8,7 @@ Class {
 	#instVars : [
 		'counters'
 	],
-	#category : #'Pet-core'
+	#category : #'PET-HTML'
 }
 
 { #category : #examples }

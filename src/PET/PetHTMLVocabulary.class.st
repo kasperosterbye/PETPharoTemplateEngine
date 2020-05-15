@@ -10,7 +10,7 @@ link -> hyperlink {text}{url}
 Class {
 	#name : #PetHTMLVocabulary,
 	#superclass : #PetVocabulary,
-	#category : #'Pet-core'
+	#category : #'PET-HTML'
 }
 
 { #category : #examples }

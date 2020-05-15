@@ -23,7 +23,7 @@ Class {
 	#instVars : [
 		'indentLevel'
 	],
-	#category : #'Pet-core'
+	#category : #'PET-Text'
 }
 
 { #category : #examples }

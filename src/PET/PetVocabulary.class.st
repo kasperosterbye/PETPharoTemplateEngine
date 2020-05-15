@@ -19,36 +19,29 @@ Class {
 		'nextVoc'
 	],
 	#classInstVars : [
-		'commandCache'
+		'commandCache',
+		'varargCommands'
 	],
-	#category : #'Pet-core'
+	#category : #'PET-Core'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #commands }
 PetVocabulary class >> cacheCommands [
-	self
-		commandCache:
-			(Dictionary
-				newFromPairs:
-					((Pragma allNamed: #keywordCommand: in: self)
-						collect: [ :p | 
-							{p arguments first.
-							p method} ]) flattened)
-]
-
-{ #category : #accessing }
-PetVocabulary class >> commandCache [
-	^ commandCache
-]
-
-{ #category : #accessing }
-PetVocabulary class >> commandCache: anObject [
-	commandCache := anObject
+	commandCache := Dictionary new.
+	(Pragma allNamed: #keywordCommand: in: self)
+		do:
+			[ :pragma | commandCache at: pragma arguments first put: pragma method ].
+	(Pragma allNamed: #keywordCommand:vararg: in: self)
+		do: [ :pragma | 
+			commandCache at: pragma arguments first put: pragma method.
+			pragma arguments second
+				ifTrue: [ varargCommands add: pragma method ] ]
 ]
 
 { #category : #compiling }
 PetVocabulary class >> compile: text classified: cat withStamp: changeStamp notifying: requestor [
-	self commandCache: nil.
+	self resetCache.
+	
 	^ super
 		compile: text
 		classified: cat
@@ -56,23 +49,43 @@ PetVocabulary class >> compile: text classified: cat withStamp: changeStamp noti
 		notifying: requestor
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #commands }
 PetVocabulary class >> findCommand: command [
-	self commandCache ifNil: [ self cacheCommands ].
-	^ self commandCache at: command ifAbsent: [ nil ]
+	commandCache ifNil: [ self cacheCommands ].
+
+	^ commandCache at: command ifAbsent: [ nil ]
+]
+
+{ #category : #testing }
+PetVocabulary class >> isVarArg: method [
+	varargCommands ifNil: [ self resetCache  ].
+	^ varargCommands includes: method
+]
+
+{ #category : #commands }
+PetVocabulary class >> resetCache [
+	<script>
+	commandCache := nil.
+	varargCommands := Set new
 ]
 
 { #category : #'as yet unclassified' }
 PetVocabulary >> doMethod: method with: args [
 	| command |
-	method numArgs = args size
-		ifTrue: [ ^ method valueWithReceiver: self arguments: args asArray ].
-	method numArgs = 1
-		ifTrue: [ ^ method valueWithReceiver: self arguments: (Array with: args) ].
-	command := (method pragmaAt: #keywordCommand:) arguments first.
+	(self class isVarArg: method)
+		ifFalse: [ method numArgs = args size
+				ifTrue: [ ^ method valueWithReceiver: self arguments: args asArray ]
+				ifFalse: [ command := (method pragmaAt: #keywordCommand:) arguments first.
 	^ ' [ Argument number mismatch in "' , command , '" expected: '
 		, method numArgs printString , ' but got: ' , args size printString
-		, ' ] '
+		, ' ] ' ] ]
+		ifTrue: [ method numArgs = 1
+				ifTrue: [ ^ method valueWithReceiver: self arguments: (Array with: args) ]
+				ifFalse: [ command := (method pragmaAt: #keywordCommand:vararg: ) arguments first.
+	^ ' [ Argument number mismatch in "' , command , '" expected: '
+		, method numArgs printString , ' but got: ' , args size printString
+		, ' ] ' ] ].
+	
 ]
 
 { #category : #accessing }

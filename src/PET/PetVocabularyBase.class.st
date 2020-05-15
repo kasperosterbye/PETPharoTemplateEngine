@@ -5,7 +5,7 @@ I implement no commands. My unknownCommand:withArgs: command delegates back to t
 Class {
 	#name : #PetVocabularyBase,
 	#superclass : #PetVocabulary,
-	#category : #'Pet-core'
+	#category : #'PET-Core'
 }
 
 { #category : #'as yet unclassified' }

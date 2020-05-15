@@ -9,7 +9,7 @@ Class {
 	#instVars : [
 		'firstElement'
 	],
-	#category : #'Pet-core'
+	#category : #'PET-HTML'
 }
 
 { #category : #examples }

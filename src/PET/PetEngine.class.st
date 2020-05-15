@@ -12,7 +12,7 @@ Class {
 	#instVars : [
 		'vocStack'
 	],
-	#category : #'Pet-core'
+	#category : #'PET-Core'
 }
 
 { #category : #'package access' }
