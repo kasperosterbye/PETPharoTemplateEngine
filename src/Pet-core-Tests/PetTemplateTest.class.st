@@ -11,7 +11,7 @@ Class {
 PetTemplateTest >> testCommandArg [
 	| in res |
 	in := 'www!foo{www}'.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'www«foo[www]»'
 ]
 
@@ -19,7 +19,7 @@ PetTemplateTest >> testCommandArg [
 PetTemplateTest >> testCommandArgSpaceAtEnd [
 	| in res |
 	in := 'www!foo{www}  '.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'www«foo[www]»  '
 ]
 
@@ -27,7 +27,7 @@ PetTemplateTest >> testCommandArgSpaceAtEnd [
 PetTemplateTest >> testCommandArgWithBraceInside [
 	| in res |
 	in := 'www!foo{ww{xxx}w}'.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'www«foo[ww{xxx}w]»'
 ]
 
@@ -35,7 +35,7 @@ PetTemplateTest >> testCommandArgWithBraceInside [
 PetTemplateTest >> testCommandNoArgs [
 	| in res |
 	in := 'www!foo www'.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'www«foo[]» www'
 ]
 
@@ -43,7 +43,7 @@ PetTemplateTest >> testCommandNoArgs [
 PetTemplateTest >> testCommandNoArgsAtEnd [
 	| in res |
 	in := 'www!foo'.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'www«foo[]»'
 ]
 
@@ -51,7 +51,7 @@ PetTemplateTest >> testCommandNoArgsAtEnd [
 PetTemplateTest >> testCommandNoArgsAtEndWithWhiteSpace [
 	| in res |
 	in := 'www!foo '.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'www«foo[]» '
 ]
 
@@ -59,7 +59,7 @@ PetTemplateTest >> testCommandNoArgsAtEndWithWhiteSpace [
 PetTemplateTest >> testCommandTwoArg [
 	| in res |
 	in := 'www!foo{www}{mmm}'.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'www«foo[www§mmm]»'
 ]
 
@@ -67,7 +67,7 @@ PetTemplateTest >> testCommandTwoArg [
 PetTemplateTest >> testEmpty [ 
 	| in res |
 	in := ''.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: ''
 ]
 
@@ -75,7 +75,7 @@ PetTemplateTest >> testEmpty [
 PetTemplateTest >> testEmptyCommand [
 	| in res |
 	in := 'aaa!.bbb'.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'aaa*.bbb'
 ]
 
@@ -83,7 +83,7 @@ PetTemplateTest >> testEmptyCommand [
 PetTemplateTest >> testNoCommands [
 	| in res |
 	in := 'joe'.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'joe'
 ]
 
@@ -92,7 +92,7 @@ PetTemplateTest >> testNoCommandsTwoLines [
 	| in res |
 	in := 'joe
 lars'.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'joe
 lars'
 ]
@@ -101,7 +101,7 @@ lars'
 PetTemplateTest >> testTwoCommandNoArgs [
 	| in res |
 	in := 'www!foo !bar www'.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'www«foo[]» «bar[]» www'
 ]
 
@@ -109,7 +109,7 @@ PetTemplateTest >> testTwoCommandNoArgs [
 PetTemplateTest >> testTwoCommands [
 	| in res |
 	in := 'www!foo{www}aaa!bar{mmm}'.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'www«foo[www]»aaa«bar[mmm]»'
 ]
 
@@ -117,6 +117,6 @@ PetTemplateTest >> testTwoCommands [
 PetTemplateTest >> testTwoExclamations [
 	| in res |
 	in := 'www!!mmm'.
-	res := PetTemplateMock new expand: in.
+	res := PetEngineMock new expand: in.
 	self assert: res equals: 'www!«mmm[]»'
 ]

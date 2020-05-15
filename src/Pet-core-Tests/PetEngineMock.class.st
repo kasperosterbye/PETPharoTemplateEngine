@@ -1,16 +1,12 @@
 Class {
-	#name : #PetTemplateMock,
+	#name : #PetEngineMock,
 	#superclass : #PetEngine,
 	#category : #'Pet-core-Tests'
 }
 
 { #category : #public }
-PetTemplateMock >> execute: command with: args [
+PetEngineMock >> execute: command with: args [
+	"I am used to test the parser"
 	command ifEmpty: [ ^ '*' ].
 	^ '«' , command , '[' , (args joinUsing: '§') , ']»'
-]
-
-{ #category : #'as yet unclassified' }
-PetTemplateMock >> omg [
-	^'abc æøå © «»'
 ]
